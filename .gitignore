@@ -1,9 +1,7 @@
-
 .import/
 *.translation
 export_presets.cfg
 .mono/
-
 bin/
 build/
 lib/
