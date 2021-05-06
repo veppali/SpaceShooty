@@ -1,8 +1,11 @@
 extends Area2D
 
 signal shoot
+signal spawn_health
 
 export (PackedScene) var Bullet
+export (PackedScene) var ExtraLife
+
 export (int) var speed = 150
 export (int) var health = 3
 
@@ -34,16 +37,23 @@ func shoot():
 	dir = dir.rotated(rand_range(-0.1, 0.1)).angle()
 	emit_signal('shoot', Bullet, global_position, dir)
 
+
 #shoots bursts n=number of bullets, delay=timedelay between bullets
 func shoot_pulse(n, delay):
 	for i in range(n):
-		shoot()
+		shoot()		
 		yield(get_tree().create_timer(delay), 'timeout')
+
+func spawn_health():	
+	#var h = ExtraLife.instance()
+	print_debug("spawnhealth")
+	emit_signal("spawn_health", ExtraLife, global_position)
 		
 func take_damage(amount):
 	health -= amount
 	if health <= 0:
-		explode()
+		spawn_health()
+		explode()		
 	
 func explode():
 	speed = 0
@@ -52,8 +62,7 @@ func explode():
 	$Sprite.hide()
 	$Explosion.show()
 	$Explosion/AnimationPlayer.play("explosion")
-	#$ExplodeSound.play()
-
+	#$ExplodeSound.play() for later
 
 func _on_Enemy_body_entered(body):
 	if body.name == 'Player':

@@ -33,6 +33,7 @@ color_ramp = SubResource( 3 )
 
 [node name="Player" type="RigidBody2D"]
 pause_mode = 1
+position = Vector2( 0, 1 )
 mode = 2
 contacts_reported = 1
 contact_monitor = true

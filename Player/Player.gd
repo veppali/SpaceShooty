@@ -41,7 +41,7 @@ func change_state(new_state):
 			$Sprite.modulate.a = 0.5
 			$InvulnerabilityTimer.start()
 		DEAD:
-			$CollisionShape2D.disabled = true
+			$CollisionShape2D.set_deferred("disabled", true)
 			$Sprite.hide()
 			linear_velocity = Vector2()
 			emit_signal("dead")
@@ -50,6 +50,9 @@ func change_state(new_state):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	get_input()
+	set_applied_force(thrust)		
+	position.x = clamp(position.x, 0, screensize.x)
+	position.y = clamp(position.y, 0, screensize.y)
 	self.shield += shield_regen * delta
 	
 func get_input():
@@ -73,19 +76,6 @@ func shoot():
 	emit_signal("shoot", Bullet, $Muzzle.global_position, rotation)
 	can_shoot = false
 	$GunTimer.start()
-	
-func _integrate_forces(physics_state):
-	set_applied_force(thrust)	
-	var xform = physics_state.get_transform()
-	if xform.origin.x > screensize.x:
-		xform.origin.x = 0
-	if xform.origin.x < 0:
-		xform.origin.x = screensize.x
-	if xform.origin.y > screensize.y:
-		xform.origin.y = 0
-	if xform.origin.y < 0:
-		xform.origin.y = screensize.y
-	physics_state.set_transform(xform)
 
 func _on_GunTimer_timeout():
 	can_shoot = true

@@ -8,6 +8,7 @@ var playing = false
 
 export (PackedScene) var Rock
 export (PackedScene) var Enemy
+export (PackedScene) var ExtraLife
 # Called when the node enters the scene tree for the first time.
 
 func new_game():
@@ -26,8 +27,7 @@ func new_level():
 	level += 1
 	$HUD.show_message("Wave %s" % level)
 	for i in range(level):
-		spawn_rock(3)
-	
+		spawn_rock(3)	
 	$EnemyTimer.wait_time = rand_range(5, 10)
 	$EnemyTimer.start()
 		
@@ -63,6 +63,7 @@ func _on_Player_shoot(bullet, pos, dir):
 	b.start(pos, dir)
 	add_child(b)
 
+
 func _on_Rock_exploded(size, radius, pos, vel):
 	if size <=1:
 		return
@@ -89,10 +90,17 @@ func _input(event):
 		else:
 			pause_game()
 
+func spawn_health(extralife, pos):
+	var h = extralife.instance()
+	h.start(pos)
+	call_deferred("add_child", h)
+	
+
 func _on_EnemyTimer_timeout():
 	var e = Enemy.instance()
 	add_child(e)
 	e.target = $Player
 	e.connect('shoot', self, '_on_Player_shoot')
+	e.connect('spawn_health', self, 'spawn_health')	
 	$EnemyTimer.wait_time = rand_range(10, 20)
 	$EnemyTimer.start()

@@ -23,7 +23,6 @@ func _on_Bullet_body_entered(body):
 		body.explode()
 		queue_free()
 
-
 func _on_Bullet_area_entered(area):
 	if area.is_in_group('enemies'):
 		area.take_damage(1)
