@@ -8,13 +8,13 @@ var playing = false
 export (PackedScene) var Rock
 export (PackedScene) var Enemy
 
-
 func new_game():
+	$InitSong.stop()
 	for rock in $Rocks.get_children():
 		rock.queue_free()
 	level = 0
 	score = 0
-	#$HUD.update_score(score)
+	$HUD.update_score(score)
 	$Player.start()
 	$HUD.show_message("Get Ready")
 	yield($HUD/MessageTimer, "timeout")
@@ -38,11 +38,10 @@ func game_over():
 	$HUD.game_over()
 
 func _ready():
+	$InitSong.play()
 	randomize()
 	screensize = get_viewport().get_visible_rect().size
 	$Player.screensize = screensize
-#	for i in range (3):
-#		spawn_rock(3)
 
 func spawn_rock(size, pos=null, vel=null):
 	if !pos:
