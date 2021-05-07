@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/space_ship_b.png" type="Texture" id=2]
 [ext_resource path="res://Player/Bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/sounds/laser_b.ogg" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/explosion_a.ogg" type="AudioStream" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -69,6 +71,13 @@ position = Vector2( -50, 0 )
 rotation = 3.14159
 amount = 25
 process_material = SubResource( 6 )
+
+[node name="LaserSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -8.058
+
+[node name="PlayerExplosion" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
 
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
 [connection signal="timeout" from="GunTimer" to="." method="_on_GunTimer_timeout"]

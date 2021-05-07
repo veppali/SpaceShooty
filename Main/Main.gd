@@ -5,11 +5,9 @@ var level = 0
 var score = 0
 var playing = false
 
-
 export (PackedScene) var Rock
 export (PackedScene) var Enemy
-export (PackedScene) var ExtraLife
-# Called when the node enters the scene tree for the first time.
+
 
 func new_game():
 	for rock in $Rocks.get_children():
@@ -43,8 +41,8 @@ func _ready():
 	randomize()
 	screensize = get_viewport().get_visible_rect().size
 	$Player.screensize = screensize
-	for i in range (3):
-		spawn_rock(3)
+#	for i in range (3):
+#		spawn_rock(3)
 
 func spawn_rock(size, pos=null, vel=null):
 	if !pos:
@@ -65,6 +63,7 @@ func _on_Player_shoot(bullet, pos, dir):
 
 
 func _on_Rock_exploded(size, radius, pos, vel):
+	$Explosion.play()
 	if size <=1:
 		return
 	for offset in [-1, 1]:
@@ -93,8 +92,7 @@ func _input(event):
 func spawn_health(extralife, pos):
 	var h = extralife.instance()
 	h.start(pos)
-	call_deferred("add_child", h)
-	
+	call_deferred("add_child", h)	
 
 func _on_EnemyTimer_timeout():
 	var e = Enemy.instance()

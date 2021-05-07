@@ -19,7 +19,6 @@ signal shield_changed
 var shield = 0 setget set_shield
 var lives = 0 setget set_lives
 
-
 var can_shoot = true
 
 # Called when the node enters the scene tree for the first time.
@@ -31,10 +30,10 @@ func _ready():
 func change_state(new_state):
 	match new_state:
 		INIT:
-			$CollisionShape2D.disabled = true
+			$CollisionShape2D.set_deferred("disabled", true)
 			$Sprite.modulate.a = 0.5
 		ALIVE:
-			$CollisionShape2D.disabled = false
+			$CollisionShape2D.set_deferred("disabled", false)
 			$Sprite.modulate.a = 1.0
 		INVULNERABLE:
 			$CollisionShape2D.set_deferred("disabled", true)
@@ -74,6 +73,7 @@ func shoot():
 	if state == INVULNERABLE:
 		return
 	emit_signal("shoot", Bullet, $Muzzle.global_position, rotation)
+	$LaserSound.play()
 	can_shoot = false
 	$GunTimer.start()
 
@@ -87,6 +87,7 @@ func set_shield(value):
 	shield = value	
 	emit_signal("shield_changed", shield)
 	if shield <= 0:
+		$PlayerExplosion.play()
 		$Explosion.show()
 		$Explosion/AnimationPlayer.play("explosion")
 		change_state(INVULNERABLE)
@@ -119,5 +120,3 @@ func _on_Player_body_entered(body):
 
 func _on_InvulnerabilityTimer_timeout():
 	change_state(ALIVE)
-	
-

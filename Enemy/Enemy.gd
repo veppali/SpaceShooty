@@ -33,6 +33,7 @@ func _on_GunTimer_timeout():
 	shoot_pulse(3, 0.15)
 
 func shoot():
+	$LaserSound.play()
 	var dir = target.global_position - global_position
 	dir = dir.rotated(rand_range(-0.1, 0.1)).angle()
 	emit_signal('shoot', Bullet, global_position, dir)
@@ -56,13 +57,14 @@ func take_damage(amount):
 		explode()		
 	
 func explode():
+	$ExplosionSound.play()
 	speed = 0
 	$GunTimer.stop()
 	$CollisionShape2D.set_deferred('disabled', true)
 	$Sprite.hide()
 	$Explosion.show()
 	$Explosion/AnimationPlayer.play("explosion")
-	#$ExplodeSound.play() for later
+	
 
 func _on_Enemy_body_entered(body):
 	if body.name == 'Player':
