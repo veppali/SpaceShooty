@@ -1,11 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/heart_50px.png" type="Texture" id=1]
 [ext_resource path="res://Pickups/ExtraLife.gd" type="Script" id=2]
+[ext_resource path="res://assets/sounds/pickable_a.ogg" type="AudioStream" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 
-[node name="ExtraLife" type="Area2D"]
+[node name="ExtraLife" type="Area2D" groups=[
+"pickup",
+]]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -16,6 +19,10 @@ scale = Vector2( 2, 2 )
 shape = SubResource( 1 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+
+[node name="Pickup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -10.0
 
 [connection signal="body_entered" from="." to="." method="_on_ExtraLife_body_entered"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

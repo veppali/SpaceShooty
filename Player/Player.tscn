@@ -1,35 +1,38 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/space_ship_b.png" type="Texture" id=2]
 [ext_resource path="res://Player/Bullet.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/sounds/laser_b.ogg" type="AudioStream" id=4]
 [ext_resource path="res://assets/sounds/explosion_a.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/pickable_a.ogg" type="AudioStream" id=6]
+[ext_resource path="res://assets/fire_c_small.png" type="Texture" id=7]
 
 [sub_resource type="CircleShape2D" id=1]
 
 [sub_resource type="Gradient" id=2]
-offsets = PoolRealArray( 0, 0.0316742, 0.977376, 1 )
-colors = PoolColorArray( 0, 0, 0, 1, 0.9375, 0.717773, 0.0585938, 1, 0.78125, 0.0610352, 0.0610352, 1, 1, 1, 1, 1 )
+offsets = PoolRealArray( 0.00929368, 0.152416, 0.576208, 0.828996, 0.992565 )
+colors = PoolColorArray( 0.925781, 0.842606, 0.842606, 0.243137, 0.941176, 0.266667, 0.054902, 0.00784314, 0.124685, 0.0842429, 0.0409122, 0.0980392, 0.23406, 0.233146, 0.233146, 0.0705882, 0.155935, 0.144362, 0.144362, 0 )
 
 [sub_resource type="GradientTexture" id=3]
 gradient = SubResource( 2 )
 
 [sub_resource type="Curve" id=4]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.710037 ), 0.0, 0.0, 0, 0, Vector2( 0.994652, 0.210037 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=5]
 curve = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=6]
 emission_shape = 2
-emission_box_extents = Vector3( 0, 10, 5 )
+emission_box_extents = Vector3( 1, 1, 0 )
 flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+spread = 11.48
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 400.0
+initial_velocity = 86.2
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 4.0
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
 
@@ -65,19 +68,26 @@ autostart = true
 wait_time = 2.0
 one_shot = true
 
-[node name="Backburner" type="Particles2D" parent="."]
-show_behind_parent = true
-position = Vector2( -50, 0 )
-rotation = 3.14159
-amount = 25
-process_material = SubResource( 6 )
-
 [node name="LaserSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
 volume_db = -8.058
 
 [node name="PlayerExplosion" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 5 )
+
+[node name="Pickup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -10.0
+
+[node name="Backburner" type="Particles2D" parent="."]
+show_behind_parent = true
+position = Vector2( -50, -1 )
+rotation = 3.14159
+amount = 1000
+speed_scale = 1.21
+draw_order = 1
+process_material = SubResource( 6 )
+texture = ExtResource( 7 )
 
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
 [connection signal="timeout" from="GunTimer" to="." method="_on_GunTimer_timeout"]

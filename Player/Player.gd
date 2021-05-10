@@ -54,6 +54,7 @@ func _process(delta):
 	position.y = clamp(position.y, 0, screensize.y)
 	self.shield += shield_regen * delta
 	
+	
 func get_input():
 	thrust = Vector2()
 	if state in [DEAD, INIT]:
@@ -65,9 +66,14 @@ func get_input():
 	if Input.is_action_pressed("thrust_back"):
 		thrust = Vector2(-engine_power, 0)
 	if Input.is_action_pressed("thrust"):
-		thrust = Vector2(engine_power, 0)#	
+		thrust = Vector2(engine_power, 0)
+		$Backburner.lifetime = 2
+		$Backburner.speed_scale = 4
 	if Input.is_action_pressed("shoot") and can_shoot:
 		shoot()
+	if !Input.is_action_pressed("thrust"):
+		$Backburner.lifetime = 1
+		$Backburner.speed_scale = 1
 		
 func shoot():
 	if state == INVULNERABLE:
@@ -85,6 +91,7 @@ func set_shield(value):
 	if value > max_shield:
 		value = max_shield
 	shield = value	
+	
 	emit_signal("shield_changed", shield)
 	if shield <= 0:
 		$PlayerExplosion.play()
@@ -95,7 +102,9 @@ func set_shield(value):
 	
 func set_lives(value):
 	self.shield = max_shield
-	lives = value
+	if lives < lives+value && lives!=3:
+		$Pickup.play()
+	lives = value	
 	emit_signal("lives_changed", lives)
 
 func start():
@@ -108,8 +117,9 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	$Explosion.hide()
 
 func _on_Player_body_entered(body):
+	
 	if body.is_in_group('rocks'):
-		body.explode()
+		body.explode()		
 #		$Explosion.show()
 #		$Explosion/AnimationPlayer.play("explosion")
 		self.shield -= 25		
@@ -117,6 +127,12 @@ func _on_Player_body_entered(body):
 			change_state(DEAD)
 		#else:
 		#	change_state(INVULNERABLE)
-
+		
+func shield():
+	if shield != 0:
+		$Sprite2/AnimationPlayer.play("Shield")
+	else:
+		return
+	
 func _on_InvulnerabilityTimer_timeout():
 	change_state(ALIVE)

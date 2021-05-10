@@ -19,7 +19,8 @@ func _process(delta):
 
 func _on_EnemyBullet_body_entered(body):
 	if body.name == 'Player':
-		body.shield -= 15
+		body.shield -= 20
+		body.shield()		
 	queue_free()
 
 func _on_VisibilityNotifier2D_screen_exited():

@@ -16,6 +16,7 @@ func _on_ExtraLife_body_entered(body):
 		body.explode()
 		queue_free()
 	if body.name == 'Player':
+		$Pickup.play()
 		body.lives += 1
 		queue_free()
 
